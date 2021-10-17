@@ -29,18 +29,22 @@ function Home() {
       <button onClick={handleClickSearch} disabled={!inputText}>
         検索
       </button>
-      {user && (
+      {!message && (
         <>
-          <h2>プロフィール</h2>
-          <Profile user={user} />
-        </>
-      )}
-      {repositories.length > 0 && (
-        <>
-          <h2>レポジトリ</h2>
-          {repositories.map((repo) => (
-            <Repository repo={repo} />
-          ))}
+          {user && (
+            <>
+              <h2>プロフィール</h2>
+              <Profile user={user} />
+            </>
+          )}
+          {repositories.length > 0 && (
+            <>
+              <h2>レポジトリ</h2>
+              {repositories.map((repo) => (
+                <Repository repo={repo} key={repo.id} />
+              ))}
+            </>
+          )}
         </>
       )}
       {message && <p>{message}</p>}

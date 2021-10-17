@@ -12,15 +12,15 @@ export const githubSlice = createSlice({
     userLoaded: (state, action) => {
       const { user } = action.payload;
       state.user = user;
+      state.message = "";
+    },
+    reposLoaded: (state, action) => {
+      const { repos } = action.payload;
+      state.repositories = repos;
     },
     errorOccured: (state, action) => {
       const { message } = action.payload;
       state.message = message;
-    },
-    reposLoaded: (state, action) => {
-      const { repos } = action.payload;
-      console.log(repos);
-      state.repositories = repos;
     },
   },
 });
@@ -49,9 +49,21 @@ export function fetchUser(userId) {
         type: "github/userLoaded",
         payload: { user: res.data },
       });
-    } catch (err) {}
+    } catch (err) {
+      const { message } = err.response.data;
+      if (message === "Not Found") {
+        dispatch({
+          type: "github/errorOccured",
+          payload: { message: "ユーザーが見つかりません" },
+        });
+      } else {
+        dispatch({
+          type: "github/errorOccured",
+          payload: { message },
+        });
+      }
+    }
   };
 }
 
-// export const {} = githubSlice.actions;
 export default githubSlice.reducer;
